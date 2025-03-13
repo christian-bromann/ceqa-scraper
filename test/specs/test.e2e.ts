@@ -4,6 +4,11 @@ import { Buffer } from 'node:buffer'
 import { browser, $ } from '@wdio/globals'
 import { mkConfig, generateCsv, asString } from 'export-to-csv'
 
+/**
+ * change this based on your search criteria
+ */
+const CEQA_URL = `https://ceqanet.opr.ca.gov/Search?DocumentType=NOP+-+Notice+of+Preparation+of+a+Draft+EIR&ProjectIssue=Greenhouse+Gas+Emissions&DevelopmentType=Office`
+
 describe('My Login application', () => {
     const csvConfig = mkConfig({ useKeysAsHeaders: true })
     const data: Record<string, string>[] = []
@@ -19,11 +24,11 @@ describe('My Login application', () => {
     }
 
     beforeEach(async () => {
-        await browser.url(`https://ceqanet.opr.ca.gov/Search?DocumentType=NOP+-+Notice+of+Preparation+of+a+Draft+EIR&ProjectIssue=Greenhouse+Gas+Emissions&DevelopmentType=Office`)
+        await browser.url(CEQA_URL)
     })
 
     it('should login with valid credentials', async () => {
-        await browser.url(`https://ceqanet.opr.ca.gov/Search?DocumentType=NOP+-+Notice+of+Preparation+of+a+Draft+EIR&ProjectIssue=Greenhouse+Gas+Emissions&DevelopmentType=Office`)
+        await browser.url(CEQA_URL)
         const nopButtons = await $$('span=NOP').getElements()
         const nopButtonsLength = nopButtons.length
 
@@ -126,7 +131,7 @@ describe('My Login application', () => {
             console.log(row);
             data.push(row)
             console.log('--------------------------------');
-            await browser.url(`https://ceqanet.opr.ca.gov/Search?DocumentType=NOP+-+Notice+of+Preparation+of+a+Draft+EIR&ProjectIssue=Greenhouse+Gas+Emissions&DevelopmentType=Office`)
+            await browser.url(CEQA_URL)
         }
 
         const csv = generateCsv(csvConfig)(data);
